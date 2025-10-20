@@ -1,0 +1,98 @@
+{% extends 'includes/header.html' %}
+
+{% block title %}{{ employee.first_name }} {{ employee.last_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Основная информация -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                {% if employee.get_main_photo %}
+                <img src="{{ employee.get_main_photo.image.url }}" class="card-img-top" alt="{{ employee.first_name }} {{ employee.last_name }}" style="max-height: 400px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top no-image" style="height: 300px;">Нет заглавного фото</div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <h1 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h1>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Пол:</strong> {{ employee.get_gender_display }}</p>
+                            <p><strong>Должность:</strong> {{ employee.get_position_display }}</p>
+                            <p><strong>Дата приёма:</strong> {{ employee.hire_date }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Номер стола:</strong> {{ employee.desk_number }}</p>
+                            <p><strong>Стаж работы:</strong> {{ employee.get_work_experience_days }} дней</p>
+                        </div>
+                    </div>
+
+                    <!-- Навыки с уровнями -->
+                    <h3>Навыки</h3>
+                    <div class="skills-section">
+                        {% for employee_skill in employee.employeeskill_set.all %}
+                        <div class="skill-item mb-3">
+                            <strong>{{ employee_skill.skill.name }}</strong>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {% widthratio employee_skill.level 1 25 %}%"
+                                     aria-valuenow="{{ employee_skill.level }}" 
+                                     aria-valuemin="1" 
+                                     aria-valuemax="4">
+                                    <strong>{{ employee_skill.get_level_display }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">Навыки не указаны</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Галерея изображений -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Галерея изображений</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for image in employee.get_gallery_photos %}
+                        <div class="col-6 mb-3">
+                            <img src="{{ image.image.url }}" class="img-thumbnail w-100" style="height: 120px; object-fit: cover;" alt="Фото сотрудника">
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">Дополнительные фото отсутствуют</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="/employees/" class="btn btn-secondary">← Назад к списку сотрудников</a>
+    </div>
+</div>
+
+<style>
+    .no-image {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .skill-item {
+        margin-bottom: 15px;
+    }
+    .progress {
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}

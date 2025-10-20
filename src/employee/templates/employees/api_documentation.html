@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .endpoints {
+            margin-top: 20px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        .endpoint h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background: #d4edda; color: #155724; }
+        .post { background: #d1ecf1; color: #0c5460; }
+        .put { background: #fff3cd; color: #856404; }
+        .delete { background: #f8d7da; color: #721c24; }
+        .auth-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .nav {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">🏠 Главная</a>
+            <a href="/employees/">👥 Сотрудники</a>
+            <a href="/admin/">⚙️ Админка</a>
+        </div>
+
+        <h1>{{ title }}</h1>
+        
+        <div class="auth-info">
+            <h3>🔐 Аутентификация</h3>
+            <p>Для доступа к API используйте JWT токен. Зарегистрируйтесь или войдите в систему.</p>
+            <p><strong>Base URL:</strong> http://localhost:8000/api/</p>
+        </div>
+
+        <div class="endpoints">
+            <h2>📋 Доступные endpoints:</h2>
+            
+            <div class="endpoint">
+                <h3>🔑 Аутентификация</h3>
+                <p><span class="method post">POST</span> <strong>/api/auth/token/</strong> - Получить JWT токен</p>
+                <p><span class="method post">POST</span> <strong>/api/auth/token/refresh/</strong> - Обновить токен</p>
+                <p><span class="method post">POST</span> <strong>/api/auth/register/</strong> - Регистрация пользователя</p>
+                <p><span class="method get">GET</span> <strong>/api/auth/me/</strong> - Информация о текущем пользователе</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>👥 Сотрудники</h3>
+                <p><span class="method get">GET</span> <strong>/api/employees/</strong> - Список сотрудников (пагинация по 10)</p>
+                <p><span class="method get">GET</span> <strong>/api/employees/?skills=Python&min_experience_days=365</strong> - Фильтрация</p>
+                <p><span class="method get">GET</span> <strong>/api/employees/{id}/</strong> - Подробная информация о сотруднике</p>
+                <p><span class="method post">POST</span> <strong>/api/employees/</strong> - Добавить сотрудника (Admin)</p>
+                <p><span class="method put">PUT</span> <strong>/api/employees/{id}/</strong> - Изменить сотрудника (Admin)</p>
+                <p><span class="method delete">DELETE</span> <strong>/api/employees/{id}/</strong> - Удалить сотрудника (Admin)</p>
+                <p><span class="method post">POST</span> <strong>/api/employees/{id}/move/</strong> - Переместить сотрудника (Keeper+)</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>🛠️ Навыки</h3>
+                <p><span class="method get">GET</span> <strong>/api/skills/</strong> - Список навыков</p>
+                <p><span class="method post">POST</span> <strong>/api/skills/</strong> - Добавить навык (Admin)</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>🪑 Столы</h3>
+                <p><span class="method get">GET</span> <strong>/api/desks/</strong> - Список столов</p>
+                <p><span class="method post">POST</span> <strong>/api/desks/</strong> - Добавить стол (Admin)</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <h3>👥 Права доступа:</h3>
+            <ul>
+                <li><strong>Посетитель:</strong> GET /api/employees/, GET /api/skills/, GET /api/desks/</li>
+                <li><strong>Смотритель:</strong> Все права посетителя + POST /api/employees/{id}/move/</li>
+                <li><strong>Администратор:</strong> Полные права на все операции</li>
+            </ul>
+
+            <h3>🔍 Примеры запросов:</h3>
+            <pre style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+# Получение токена
+curl -X POST http://localhost:8000/api/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "user", "password": "pass"}'
+
+# Получение списка сотрудников
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://localhost:8000/api/employees/"
+
+# Фильтрация сотрудников
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://localhost:8000/api/employees/?skills=Python&min_experience_days=365"
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

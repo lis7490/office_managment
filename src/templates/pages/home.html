@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Общее количество сотрудников -->
+    <div class="total-employees-card">
+        <h2>Общее количество сотрудников: {{ total_employees }}</h2>
+    </div>
+
+    <!-- 4 последних сотрудника -->
+    <h2>Последние принятые сотрудники</h2>
+    <div class="row">
+        {% for employee in latest_employees %}
+        <div class="col-md-3 mb-4">
+            <div class="card employee-card">
+                {% with main_photo=employee.get_main_photo %}
+                    {% if main_photo %}
+                    <img src="{{ main_photo.image.url }}" class="card-img-top" alt="{{ employee.first_name }} {{ employee.last_name }}">
+                    {% else %}
+                    <div class="card-img-top no-image">Нет фото</div>
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="card-body">
+                    <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
+                    <p class="card-text">
+                        <strong>Должность:</strong> {{ employee.get_position_display }}<br>
+                        <strong>Стол:</strong> {{ employee.desk_number }}<br>
+                        <strong>Стаж:</strong> {{ employee.get_work_experience_days }} дней
+                    </p>
+                    <a href="{% url 'employee_detail' employee.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

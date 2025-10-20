@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Сотрудники</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .employee-card {
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        .employee-card:hover {
+            transform: translateY(-5px);
+        }
+        .no-image {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            text-align: center;
+            padding: 20px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .total-employees-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Мой сайт</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Главная</a>
+                <a class="nav-link" href="/employees/">Все сотрудники</a>
+                <a class="nav-link" href="/admin/">Админка</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Общее количество сотрудников -->
+        <div class="total-employees-card">
+            <h2>Общее количество сотрудников: {{ total_employees }}</h2>
+        </div>
+
+        <a class="btn btn-light btn-lg me-3" href="/employees/" role="button">Посмотреть всех сотрудников</a>
+
+        <!-- 4 последних сотрудника -->
+        <h2>Последние принятые сотрудники</h2>
+        <div class="row">
+            {% for employee in latest_employees %}
+            <div class="col-md-3 mb-4">
+                <div class="card employee-card">
+                    {% if employee.get_main_photo %}
+                    <img src="{{ employee.get_main_photo.image.url }}" class="card-img-top" alt="{{ employee.first_name }} {{ employee.last_name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top no-image">Нет фото</div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
+                        <p class="card-text">
+                            <strong>Должность:</strong> {{ employee.get_position_display }}<br>
+                            <strong>Стол:</strong> {{ employee.desk_number }}<br>
+                            <strong>Стаж:</strong> {{ employee.get_work_experience_days }} дней
+                        </p>
+                        <a href="/employees/{{ employee.pk }}/" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">Сотрудники не найдены</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <a class="btn btn-light btn-lg me-3" href="/employees/" role="button">Посмотреть всех сотрудников</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

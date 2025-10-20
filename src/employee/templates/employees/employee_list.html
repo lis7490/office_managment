@@ -1,0 +1,74 @@
+{% extends 'includes/header.html' %}
+
+{% block title %}Все сотрудники{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Все сотрудники</h1>
+    
+    <div class="row">
+        {% for employee in page_obj %}
+        <div class="col-md-6 mb-4">
+            <div class="card employee-card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        {% if employee.get_main_photo %}
+                        <img src="{{ employee.get_main_photo.image.url }}" class="img-fluid rounded-start h-100 w-100" style="object-fit: cover;" alt="{{ employee.first_name }} {{ employee.last_name }}">
+                        {% else %}
+                        <div class="no-image h-100 d-flex align-items-center justify-content-center">Нет фото</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
+                            <p class="card-text">
+                                <strong>Должность:</strong> {{ employee.get_position_display }}<br>
+                                <strong>Стол:</strong> {{ employee.desk_number }}<br>
+                                <strong>Стаж:</strong> {{ employee.get_work_experience_days }} дней<br>
+                                <strong>Дата приёма:</strong> {{ employee.hire_date }}
+                            </p>
+                            <a href="/employees/{{ employee.pk }}/" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Сотрудники не найдены</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">Первая</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
