@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,10 +42,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "employee",
     "workplace",
-    'rest_framework',
+    
     'rest_framework_simplejwt',
     'django_filters',
     "django_cleanup.apps.CleanupConfig",
+    
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -81,9 +85,13 @@ WSGI_APPLICATION = "office.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'office_db',           # Должно совпадать с POSTGRES_DB
+        'USER': 'office_user',         # Должно совпадать с POSTGRES_USER
+        'PASSWORD': 'office_pass',     # Должно совпадать с POSTGRES_PASSWORD
+        'HOST': 'db',                  # Имя сервиса в docker-compose
+        'PORT': '5432',
     }
 }
 
@@ -144,9 +152,13 @@ import sys
 if 'test' in sys.argv:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'myuser',
+        'PASSWORD': 'mypassword',
+        'HOST': 'db',
+        'PORT': '5432',
+    }
     }
 
 REST_FRAMEWORK = {
