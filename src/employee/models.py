@@ -253,7 +253,7 @@ class EmployeeSkill(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_('Дата добавления')
+        verbose_name=_('Дата добавления'),
     )
     
     class Meta:
