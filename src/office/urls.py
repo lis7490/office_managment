@@ -4,10 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from employee import views
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
-from django.contrib import admin
-from django.urls import path, include
-from employee import views
+
+
+
+
 
 urlpatterns = [
     # Главная страница
@@ -22,6 +24,14 @@ urlpatterns = [
     
     # Админка
     path('admin/', admin.site.urls),
+    path('api/employees/', include('employee.urls')),
+    path('api/workplace/', include('workplace.urls')),
+    # Документация API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Swagger UI
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # Redoc
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 if settings.DEBUG:

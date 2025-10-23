@@ -5,12 +5,19 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+      - static_volume:/app/src/static
+      - media_volume:/app/src/media
     working_dir: /app/src
     environment:
       - DJANGO_SETTINGS_MODULE=office.settings
+      - DEBUG=True
+      - SECRET_KEY=django-insecure-your-secret-key-change-in-production
+      - DATABASE_URL=postgresql://office_user:office_pass@db:5432/office_db
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
     command: >
       sh -c "sleep 5 && 
              python manage.py migrate && 
+             python manage.py collectstatic --noinput &&
              python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
@@ -28,3 +35,5 @@ services:
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:

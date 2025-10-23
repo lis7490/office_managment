@@ -1,0 +1,41 @@
+/* static/css/styles.css */
+.employee-card {
+    transition: transform 0.2s;
+    height: 100%;
+}
+
+.employee-card:hover {
+    transform: translateY(-5px);
+}
+
+.no-image {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+    padding: 20px;
+}
+
+.no-image-large {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.2em;
+}
+
+.total-employees-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.skills-section .progress {
+    height: 8px;
+}
+
+.skill-item {
+    margin-bottom: 15px;
+}

@@ -1,16 +1,21 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from . import api_views  # Импортируем API views
+from . import views      # Импортируем обычные views
 
+# Router для API
 router = DefaultRouter()
-router.register('employees', views.EmployeeViewSet, basename='employees')
-router.register('skills', views.SkillViewSet, basename='skills')
-router.register('desks', views.DeskViewSet, basename='desks')
-router.register('images', views.EmployeeImageViewSet, basename='images')
-router.register('reservations', views.ReservationViewSet, basename='reservations')
+router.register('employees', api_views.EmployeeViewSet, basename='employees')
+router.register('desks', api_views.DeskViewSet, basename='desks')
+router.register('skills', api_views.SkillViewSet, basename='skills')
+router.register('employee-skills', api_views.EmployeeSkillViewSet, basename='employee-skills')
+router.register('employee-images', api_views.EmployeeImageViewSet, basename='employee-images')
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('auth/register/', views.UserRegistrationView.as_view(), name='register'),
-    path('auth/me/', views.CurrentUserView.as_view(), name='current-user'),
+    # HTML routes
+    path('', views.employee_list, name='employee_list'),
+    path('<int:pk>/', views.employee_detail, name='employee_detail'),
+    
+    # API routes
+    path('api/', include(router.urls)),
 ]
