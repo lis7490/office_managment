@@ -162,7 +162,7 @@ docker-compose exec web python manage.py migrate
 # Откат миграций
 docker-compose exec web python manage.py migrate app_name zero
 Администрирование
-bash
+
 # Создание суперпользователя
 docker-compose exec web python manage.py createsuperuser
 
@@ -178,6 +178,9 @@ docker-compose exec web python manage.py test
 
 # Остановка контейнеров
 docker-compose down
+
+# Запуск контейнеров
+docker-compose up -d
 
 # Остановка с удалением volumes
 docker-compose down -v
